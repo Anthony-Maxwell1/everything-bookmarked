@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audio Player</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    #audio-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    #audio-player {
+      width: 300px;
+      margin-bottom: 20px;
+    }
+
+    #custom-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    button {
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+
+    img {
+      width: 40px;
+      height: 40px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="audio-container">
+  <audio id="audio-player" controls></audio>
+  <div id="custom-controls">
+    <button onclick="backwardAudio()"><img src="https://cdn-icons-png.flaticon.com/512/91/91250.png" alt="Backward"></button>
+    <button id="playPauseButton" onclick="togglePlayPause()"><img src="https://static.thenounproject.com/png/3648092-200.png" alt="Play"></button>
+    <button onclick="forwardAudio()"><img src="https://cdn-icons-png.flaticon.com/512/91/91250.png" alt="Forward"></button>
+  </div>
+  <script>
+    const queryParams = new URLSearchParams(window.location.search);
+    const soundURL = queryParams.get('soundurl');
+    const audioElement = document.getElementById('audio-player');
+    audioElement.src = soundURL;
+
+    audioElement.addEventListener('ended', function() {
+      window.parent.postMessage('audioEnded', '*');
+    });
+
+    function togglePlayPause() {
+      const playPauseButton = document.getElementById('playPauseButton');
+      if (audioElement.paused) {
+        audioElement.play();
+        playPauseButton.innerHTML = '<img src="https://uxwing.com/wp-content/themes/uxwing/download/controller-and-music/pause-button-icon.png" alt="Pause">';
+      } else {
+        audioElement.pause();
+        playPauseButton.innerHTML = '<img src="https://static.thenounproject.com/png/3648092-200.png" alt="Play">';
+      }
+    }
+
+    function backwardAudio() {
+      audioElement.currentTime -= 10;
+    }
+
+    function forwardAudio() {
+      audioElement.currentTime += 10;
+    }
+  </script>
+</div>
+
+</body>
+</html>
